@@ -32,6 +32,8 @@ namespace TSP
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.txtSeed = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
+            this.lblProblem = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnRun = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -45,8 +47,6 @@ namespace TSP
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
             this.tbElapsedTime = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
-            this.lblProblem = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,13 +80,28 @@ namespace TSP
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(31, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(32, 22);
             this.toolStripLabel1.Text = "Seed";
             // 
             // txtSeed
             // 
             this.txtSeed.Name = "txtSeed";
             this.txtSeed.Size = new System.Drawing.Size(50, 25);
+            // 
+            // toolStripLabel5
+            // 
+            this.toolStripLabel5.Name = "toolStripLabel5";
+            this.toolStripLabel5.Size = new System.Drawing.Size(55, 22);
+            this.toolStripLabel5.Text = "Problem:";
+            // 
+            // lblProblem
+            // 
+            this.lblProblem.AutoSize = false;
+            this.lblProblem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblProblem.Name = "lblProblem";
+            this.lblProblem.Size = new System.Drawing.Size(50, 22);
+            this.lblProblem.Text = "--";
+            this.lblProblem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toolStripSeparator3
             // 
@@ -99,7 +114,7 @@ namespace TSP
             this.btnRun.Image = ((System.Drawing.Image)(resources.GetObject("btnRun.Image")));
             this.btnRun.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(30, 22);
+            this.btnRun.Size = new System.Drawing.Size(32, 22);
             this.btnRun.Text = "Run";
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
@@ -113,7 +128,7 @@ namespace TSP
             this.bNewProblem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.bNewProblem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bNewProblem.Name = "bNewProblem";
-            this.bNewProblem.Size = new System.Drawing.Size(72, 22);
+            this.bNewProblem.Size = new System.Drawing.Size(81, 22);
             this.bNewProblem.Text = "new problem";
             this.bNewProblem.Click += new System.EventHandler(this.bNewProblem_Click);
             // 
@@ -125,7 +140,7 @@ namespace TSP
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(67, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(75, 22);
             this.toolStripLabel2.Text = "Problem Size";
             // 
             // tbProblemSize
@@ -143,7 +158,7 @@ namespace TSP
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(65, 22);
+            this.toolStripLabel3.Size = new System.Drawing.Size(70, 22);
             this.toolStripLabel3.Text = "Cost of tour";
             // 
             // tbCostOfTour
@@ -162,7 +177,7 @@ namespace TSP
             // toolStripLabel4
             // 
             this.toolStripLabel4.Name = "toolStripLabel4";
-            this.toolStripLabel4.Size = new System.Drawing.Size(53, 22);
+            this.toolStripLabel4.Size = new System.Drawing.Size(58, 22);
             this.toolStripLabel4.Text = "Solved in ";
             // 
             // tbElapsedTime
@@ -173,21 +188,6 @@ namespace TSP
             this.tbElapsedTime.Text = "--";
             this.tbElapsedTime.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // toolStripLabel5
-            // 
-            this.toolStripLabel5.Name = "toolStripLabel5";
-            this.toolStripLabel5.Size = new System.Drawing.Size(49, 22);
-            this.toolStripLabel5.Text = "Problem:";
-            // 
-            // lblProblem
-            // 
-            this.lblProblem.AutoSize = false;
-            this.lblProblem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblProblem.Name = "lblProblem";
-            this.lblProblem.Size = new System.Drawing.Size(50, 22);
-            this.lblProblem.Text = "--";
-            this.lblProblem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -196,6 +196,7 @@ namespace TSP
             this.Controls.Add(this.toolStrip1);
             this.Name = "Form1";
             this.Text = "Traveling Sales Person";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.toolStrip1.ResumeLayout(false);

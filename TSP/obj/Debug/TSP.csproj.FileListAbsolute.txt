@@ -8,3 +8,11 @@ F:\CS312TA\TSPBranchAndBound\TSP\obj\Debug\ResolveAssemblyReference.cache
 F:\CS312TA\TSPBranchAndBound\TSP\obj\Debug\TSP.Form1.resources
 F:\CS312TA\TSPBranchAndBound\TSP\obj\Debug\TSP.Properties.Resources.resources
 F:\CS312TA\TSPBranchAndBound\TSP\obj\Debug\TSP.csproj.GenerateResource.Cache
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Debug\TSP.exe
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Debug\TSP.pdb
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Debug\TSP.exe
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Debug\TSP.pdb
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Debug\TSP.csprojResolveAssemblyReference.cache
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Debug\TSP.Form1.resources
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Debug\TSP.Properties.Resources.resources
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Debug\TSP.csproj.GenerateResource.Cache

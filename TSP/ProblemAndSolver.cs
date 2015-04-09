@@ -237,26 +237,91 @@ namespace TSP
                 return -1D; 
         }
 
+        double BSSF;
+        double minCost;
+        double currCost;
+        int minIndex;
+        double[,] initialState;
+
         /// <summary>
         ///  solve the problem.  This is the entry point for the solver when the run button is clicked
         /// right now it just picks a simple solution. 
         /// </summary>
         public void solveProblem()
         {
+
+            /******* STEP 1 Create the initial State *******/
+            init_state();
+
+            /******* STEP 2 Get a 'Quick' BSSF *******/
             int x;
-            Route = new ArrayList(); 
-            // this is the trivial solution. 
-            for (x = 0; x < Cities.Length; x++)
+            int currIndex = 0;
+            Route = new ArrayList();
+
+            //Get the next neighbor greedily based on lowest cost
+            //While our Route list size is less than the number of cities (meaning we finish once we get to all the cities)
+            while(Route.Count < Cities.Length)
             {
-                Route.Add( Cities[Cities.Length - x -1]);
+                //Get an arbitrarily large minimum cost
+                minCost = double.MaxValue;
+
+                //Loop through all the cities to find the one with the least cost
+                for (x = 0; x < Cities.Length; x++)
+                {
+                    //Make sure we're not trying to check against ourself, because that would definitely be the minimum cost and kind of ruin this whole thing.....
+                    if(x != currIndex)
+                    {
+                        //Make sure the Route list doesn't already contain the city we're trying to add. If it does, it won't be a tour so we don't want to use it again
+                        if(!Route.Contains(Cities[x]))
+                        {
+                            //Get the cost from the current index to the next index. If it's less than what we have, make the 'minCost' equal to our 'currCost' and choose our new minimum index
+                            currCost = Cities[currIndex].costToGetTo(Cities[x]);
+                            if(currCost < minCost)
+                            {
+                                minCost = currCost;
+                                minIndex = currIndex;
+                            }
+                        }
+                    }
+                }
+                //Once we found the city with the lowest cost that is still not in the tour, we have to add that city to our Route
+                currIndex = minIndex;
+                Route.Add(Cities[currIndex]);
             }
-            // call this the best solution so far.  bssf is the route that will be drawn by the Draw method. 
+
+            //Once we have a complete tour, we need to calculate the cost of it and make it our initial BSSF
             bssf = new TSPSolution(Route);
-            // update the cost of the tour. 
-            Program.MainForm.tbCostOfTour.Text = " " + bssf.costOfRoute();
-            // do a refresh. 
-            Program.MainForm.Invalidate();
+            BSSF = bssf.costOfRoute();
+
+            /******* STEP 3 Create a new Agenda *******/
+            // TODO: Agenda will be our Priority Queue (do we need to implement the multiplication thing when we add?? I dunno yet.)
+
+            /******* STEP 4 Add our first Route and BSSF to the agenda *******/
+            // TODO: We will add our state and the BSSF to the agenda
+
+            /******* STEP 5 Add our first Route and BSSF to the agenda *******/
+
         }
+
+        public void init_state()
+        {
+            initialState = new double[Cities.Length, Cities.Length];
+            for(int i = 0; i < Cities.Length; i++)
+            {
+                for (int j = 0; j < Cities.Length; i++)
+                {
+                    if(i == j)
+                    {
+                        initialState[i, j] = double.MaxValue;
+                    }
+                    else
+                    {
+                        initialState[i, j] = Cities[i].costToGetTo(Cities[j]);
+                    }
+                }
+            }    
+        }
+            
         #endregion
     }
 }
