@@ -285,13 +285,13 @@ namespace TSP
 
             /******* STEP 2 Get a 'Quick' BSSF *******/
             quick_solution();
-            double init_bound = bound(initialState).lower_bound;
+            double init_bound = bound(initialState, 0).lower_bound;
             int[,] route = new int[Cities.Length, 2];
             best_state = new State(initialState, init_bound, BSSF, Cities.Length - 1, route);
 
             /******* STEP 3 Create a new Agenda *******/
             // TODO: Agenda will be our Priority Queue (do we need to implement the multiplication thing when we add?? I dunno yet.)
-            Agenda = new HeapPriorityQueue<State>(100);
+            Agenda = new HeapPriorityQueue<State>(1000);
             Agenda.Clear();
             Agenda.Enqueue(best_state, init_bound);
             while (Agenda.Count > 0 && DateTime.Now < end && BSSF != Agenda.First.lower_bound)
@@ -300,6 +300,10 @@ namespace TSP
                 if (u.lower_bound < BSSF)
                 {
                     HashSet<State> children = successors(u);
+                    if (children == null)
+                    {
+                        String str = "OH NO";
+                    }
                     foreach(State child in children)
                     {
 
@@ -384,6 +388,7 @@ namespace TSP
         // heuristic(lower_bound, cities_left) evaluate heuristic function according to state
         public double heuristic(double lower_bound, int cities_left)
         {
+            if (cities_left < 1) return lower_bound;
             return lower_bound + (cities_left * 7);
         }
 
@@ -404,11 +409,10 @@ namespace TSP
         }
 
         // evaluate_edge(i,j,state) decide whether to include/exclude, then add to agenda
-        public HashSet<State> evaluate_edge(int i, int j, double[,] state, int cities_left, int[,] route)
+        public HashSet<State> evaluate_edge(int i, int j, State state)
         {
-            double[,] include = state;
-            double[,] exclude = state;
-            double[,] lowest_state = state;
+            double[,] include = state.state;
+            double[,] exclude = state.state;
             HashSet<State> childrenList = new HashSet<State>();
 
             //Set the exclude value to inifinity
@@ -420,17 +424,19 @@ namespace TSP
                 include[x, j] = double.MaxValue;
                 include[i, x] = double.MaxValue;
             }
-
+            include[j, i] = double.MaxValue;
             //Reduce both of their matrices
-            State includeState = bound(include);
-            State excludeState = bound(exclude);
-            
-            includeState.cities_left = cities_left - 1;
-            excludeState.cities_left = cities_left - 1;
-            includeState.route = route;
-            excludeState.route = route;
-            includeState.route[Cities.Length - 1 - cities_left, 0] = i;
-            includeState.route[Cities.Length - 1 - cities_left, 1] = j;
+            State includeState = bound(include, state.lower_bound);
+            State excludeState = bound(exclude, state.lower_bound);
+
+            includeState.cities_left = state.cities_left - 1;
+            excludeState.cities_left = state.cities_left - 1;
+            includeState.route = state.route;
+            excludeState.route = state.route;
+            includeState.route[Cities.Length - 1 - state.cities_left, 0] = i;
+            includeState.route[Cities.Length - 1 - state.cities_left, 1] = j;
+            includeState.cost = heuristic(includeState.lower_bound, includeState.cities_left);
+            excludeState.cost = heuristic(excludeState.lower_bound, excludeState.cities_left);
 
             childrenList.Add(includeState);
             childrenList.Add(excludeState);
@@ -458,17 +464,13 @@ namespace TSP
         // successors(State) find successors for given State
         public HashSet<State> successors(State state)
         {
-            int i = int.MaxValue;
-            int j = int.MaxValue;
             for (int x = 0; x < Cities.Length; x++)
             {
                 for (int y = 0; y < Cities.Length; y++)
                 {
                     if (state.state[x,y] != double.MaxValue)
                     {
-                        i = x;
-                        j = y;
-                        return evaluate_edge(i, j, state.state, state.cities_left, state.route);
+                        return evaluate_edge(x, y, state);
                     }
                 }
             }
@@ -476,9 +478,9 @@ namespace TSP
         }
 
         // bound(costMatrix) find lower bound for given cost matrix
-        public State bound(double[,] state)
+        public State bound(double[,] state, double bounding)
         {
-            double lower_bound = 0;
+            double lower_bound = bounding;
             // reduce by row
             for (int x = 0; x < Cities.Length; x++)
             {

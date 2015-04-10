@@ -18,8 +18,9 @@ C:\Users\dnorth2\workspace\TSP\TSP\obj\Debug\TSP.Properties.Resources.resources
 C:\Users\dnorth2\workspace\TSP\TSP\obj\Debug\TSP.csproj.GenerateResource.Cache
 \\psf\Google Drive\CS\312\TSP\TSP\obj\Debug\TSP.exe
 \\psf\Google Drive\CS\312\TSP\TSP\obj\Debug\TSP.pdb
-C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\obj\Debug\TSP.exe
-C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\obj\Debug\TSP.pdb
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Debug\TSP.exe.config
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Debug\Priority Queue.dll
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Debug\Priority Queue.pdb
 C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\obj\Debug\TSP.csprojResolveAssemblyReference.cache
 C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\obj\Debug\TSP.Form1.resources
 C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\obj\Debug\TSP.Properties.Resources.resources
@@ -29,6 +30,5 @@ C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\bin\Debug\TSP.exe
 C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\bin\Debug\TSP.pdb
 C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\bin\Debug\Priority Queue.dll
 C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\bin\Debug\Priority Queue.pdb
-C:\Users\dnorth2\workspace\TSP\TSP\bin\Debug\TSP.exe.config
-C:\Users\dnorth2\workspace\TSP\TSP\bin\Debug\Priority Queue.dll
-C:\Users\dnorth2\workspace\TSP\TSP\bin\Debug\Priority Queue.pdb
+C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\obj\Debug\TSP.exe
+C:\Users\Travis\Google Drive\CS\312\TSP (1)\TSP\obj\Debug\TSP.pdb
