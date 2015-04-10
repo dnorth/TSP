@@ -299,7 +299,29 @@ namespace TSP
                 State u = Agenda.Dequeue();
                 if (u.lower_bound < BSSF)
                 {
-                    successors(u);
+                    HashSet<State> children = successors(u);
+                    foreach(State child in children)
+                    {
+
+                        child.cost = heuristic(child.lower_bound, child.cities_left);
+                        if (DateTime.Now >= end)
+                        {
+                            break;
+                        }
+                        //This is the weird requirement we're not sure of yet. :D
+                        if (child.lower_bound < BSSF)
+                        {
+                            if(criterion(child.state))
+                            {
+                                BSSF = child.cost;
+                            }
+                            else
+                            {
+                                Agenda.Enqueue(child, child.cost);
+                            }
+                        }
+                    }
+                        
                 }
             }
 
@@ -382,19 +404,41 @@ namespace TSP
         }
 
         // evaluate_edge(i,j,state) decide whether to include/exclude, then add to agenda
-        public void evaluate_edge(int i, int j, double[,] state, int cities_left, int[,] route)
+        public HashSet<State> evaluate_edge(int i, int j, double[,] state, int cities_left, int[,] route)
         {
             double[,] include = state;
             double[,] exclude = state;
             double[,] lowest_state = state;
+            HashSet<State> childrenList = new HashSet<State>();
+
+            //Set the exclude value to inifinity
             exclude[i, j] = double.MaxValue;
+
+            //Get all the values in the columns and rows for the include and set them to infinity
             for (int x = 0; x < Cities.Length; x++)
             {
                 include[x, j] = double.MaxValue;
                 include[i, x] = double.MaxValue;
             }
-            State exclude_state = bound(exclude);
-            State include_state = bound(exclude);
+
+            //Reduce both of their matrices
+            State includeState = bound(include);
+            State excludeState = bound(exclude);
+            
+            includeState.cities_left = cities_left - 1;
+            excludeState.cities_left = cities_left - 1;
+            includeState.route = route;
+            excludeState.route = route;
+            includeState.route[Cities.Length - 1 - cities_left, 0] = i;
+            includeState.route[Cities.Length - 1 - cities_left, 1] = j;
+
+            childrenList.Add(includeState);
+            childrenList.Add(excludeState);
+
+
+            return childrenList;
+        }
+            /*
             double exclude_bound = exclude_state.lower_bound;
             double include_bound = include_state.lower_bound;
             double lowest_bound = 0;
@@ -407,31 +451,12 @@ namespace TSP
             {
                 lowest_bound = include_bound;
                 lowest_state = include_state.state;
-            }
-            double cost = heuristic(lowest_bound, cities_left-1);
-            if (DateTime.Now >= end)
-            {
-                return;
-            }
-            if (cost < BSSF)
-            {
-                int[,] new_route = route;
-                new_route[Cities.Length - 1 - cities_left, 0] = i;
-                new_route[Cities.Length - 1 - cities_left, 1] = j;
-                if (criterion(lowest_state))
-                {
-                    BSSF = cost;
-                    best_state = new State(lowest_state, lowest_bound, cost, cities_left - 1, new_route);
-                }
-                else
-                {
-                    Agenda.Enqueue(new State(lowest_state, lowest_bound, cost, cities_left - 1, new_route), cost);
-                }
-            }
-        }
+            }*/
+            /*
+        }*/
 
         // successors(State) find successors for given State
-        public void successors(State state)
+        public HashSet<State> successors(State state)
         {
             int i = int.MaxValue;
             int j = int.MaxValue;
@@ -443,11 +468,11 @@ namespace TSP
                     {
                         i = x;
                         j = y;
-                        evaluate_edge(i, j, state.state, state.cities_left, state.route);
-                        return;
+                        return evaluate_edge(i, j, state.state, state.cities_left, state.route);
                     }
                 }
             }
+            return null;
         }
 
         // bound(costMatrix) find lower bound for given cost matrix
