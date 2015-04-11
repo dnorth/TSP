@@ -1,0 +1,11 @@
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Release\TSP.exe.config
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Release\TSP.exe
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Release\TSP.pdb
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Release\Priority Queue.dll
+C:\Users\dnorth2\workspace\TSP\TSP\bin\Release\Priority Queue.pdb
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Release\TSP.csprojResolveAssemblyReference.cache
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Release\TSP.Form1.resources
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Release\TSP.Properties.Resources.resources
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Release\TSP.csproj.GenerateResource.Cache
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Release\TSP.exe
+C:\Users\dnorth2\workspace\TSP\TSP\obj\Release\TSP.pdb

@@ -280,7 +280,7 @@ namespace TSP
         public void solveProblem()
         {
             DateTime start = DateTime.Now;
-            end = start.AddSeconds(60);
+            end = start.AddSeconds(60000);
 
             /******* STEP 1 Create the initial State *******/
             init_state();
@@ -296,7 +296,7 @@ namespace TSP
             Agenda = new HeapPriorityQueue<State>(1000000);
             Agenda.Clear();
             Agenda.Enqueue(best_state, init_bound);
-            while (Agenda.Count > 0 && DateTime.Now < end && BSSF != Agenda.First.lower_bound)
+            while (Agenda.Count > 0 && DateTime.Now < end)
             {
                 State u = Agenda.Dequeue();
                 if (u.lower_bound < BSSF)
@@ -326,16 +326,30 @@ namespace TSP
                     }             
                 }
             }
+
             if (best_state.cost != 0)
             {
                 Route.Clear();
 
                 //Route.Add(Cities[best_state.edges.Keys[0]]);
-                Route.Add(Cities[(int)best_state.edges.GetKey(0)]);
+                int first_city = (int)best_state.edges.GetKey(0);
+                int current_city = first_city;
 
-                for (int i = 0; i < best_state.edges.Count; i++)
+                while (true)
                 {
-                    Route.Add(Cities[(int)best_state.edges.GetByIndex(i)]);
+                    Route.Add(Cities[current_city]);
+                    for (int x = 0; x < best_state.edges.Count; x++)
+                    {
+                        if ((int)best_state.edges.GetKey(x) == current_city)
+                        {
+                            current_city = (int)best_state.edges.GetByIndex(x);
+                            break;
+                        }
+                    }
+                    if (current_city == first_city)
+                    {
+                        break;
+                    }
                 }
 
                 bssf = new TSPSolution(Route);
@@ -357,24 +371,14 @@ namespace TSP
         public double heuristic(double lower_bound, int cities_left)
         {
             if (cities_left < 1) return lower_bound;
-            return lower_bound + (cities_left * 9001);
+            return lower_bound + (cities_left * 7);
         }
 
         // criterion(state) evaluates state to determine if criterion or not
         public bool criterion(State state)
         {
             if (state.edges.Count == Cities.Length) return true;
-            for (int x = 0; x < Cities.Length; x++)
-            {
-                for (int y = 0; y < Cities.Length; y++)
-                {
-                    if (state.state[x,y] != double.MaxValue)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
+            return false;
         }
 
         // evaluate_edge(i,j,state) decide whether to include/exclude, then add to agenda
@@ -395,21 +399,24 @@ namespace TSP
                 include[i, x] = double.MaxValue;
             }
             include[j, i] = double.MaxValue;
-            //Reduce both of their matrices
+
+            if(state.cities_left > 1)
+            {
+                //Reduce both of their matrices
+                State excludeState = bound(exclude, state.lower_bound);
+                excludeState.cities_left = state.cities_left;
+                excludeState.edges = (SortedList)state.edges.Clone();
+                excludeState.cost = state.cost;
+                childrenList.Add(excludeState);
+            }
+
             State includeState = bound(include, state.lower_bound);
-            State excludeState = bound(exclude, state.lower_bound);
-
             includeState.cities_left = state.cities_left - 1;
-            excludeState.cities_left = state.cities_left;
             includeState.edges = (SortedList)state.edges.Clone();
-            excludeState.edges = (SortedList)state.edges.Clone();
             includeState.edges.Add(i, j);
-
             includeState.cost = state.cost + Cities[i].costToGetTo(Cities[j]);
-            excludeState.cost = state.cost;
-
             childrenList.Add(includeState);
-            childrenList.Add(excludeState);
+
 
             return childrenList;
         }
@@ -421,7 +428,7 @@ namespace TSP
             {
                 for (int y = 0; y < Cities.Length; y++)
                 {
-                    if (state.state[x,y] != double.MaxValue)
+                    if (state.state[x,y] == 0)
                     {
                         if (!premature(x, y, state))
                         {
@@ -443,11 +450,31 @@ namespace TSP
         // premature(x, y, state) checks to see if given edge could be used to complete a premature cycle
         public bool premature(int x, int y, State state)
         {
-            if (state.cities_left > 0)
+            if (state.cities_left > 1)
             {
-                if (state.edges.ContainsKey(y) || state.edges.ContainsKey(x))
+                int first_city = x;
+                int current_city = y;
+                while(true)
                 {
-                    return true;
+                    if (current_city == first_city)
+                    {
+                        return true;
+                    }
+                    if (state.edges.ContainsKey(current_city))
+                    {
+                        for (int i = 0; i < state.edges.Count; i++)
+                        {
+                            if ((int)state.edges.GetKey(i) == current_city)
+                            {
+                                current_city = (int)state.edges.GetByIndex(i);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
             return false;

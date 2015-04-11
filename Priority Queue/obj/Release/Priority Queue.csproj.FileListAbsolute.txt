@@ -1,0 +1,5 @@
+C:\Users\dnorth2\workspace\TSP\Priority Queue\bin\Release\Priority Queue.dll
+C:\Users\dnorth2\workspace\TSP\Priority Queue\bin\Release\Priority Queue.pdb
+C:\Users\dnorth2\workspace\TSP\Priority Queue\obj\Release\Priority Queue.csprojResolveAssemblyReference.cache
+C:\Users\dnorth2\workspace\TSP\Priority Queue\obj\Release\Priority Queue.dll
+C:\Users\dnorth2\workspace\TSP\Priority Queue\obj\Release\Priority Queue.pdb
