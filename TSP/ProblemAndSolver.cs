@@ -280,7 +280,7 @@ namespace TSP
         public void solveProblem()
         {
             DateTime start = DateTime.Now;
-            end = start.AddSeconds(60000);
+            end = start.AddSeconds(60);
 
             /******* STEP 1 Create the initial State *******/
             init_state();
@@ -292,34 +292,44 @@ namespace TSP
             best_state = new State(initialState, init_bound, 0, Cities.Length, edges);
 
             /******* STEP 3 Create a new Agenda *******/
-            // TODO: Agenda will be our Priority Queue (do we need to implement the multiplication thing when we add?? I dunno yet.)
             Agenda = new HeapPriorityQueue<State>(1000000);
             Agenda.Clear();
+
+            /******* STEP 4 Add our first Route and BSSF to the agenda *******/
             Agenda.Enqueue(best_state, init_bound);
-            while (Agenda.Count > 0 && DateTime.Now < end)
+
+            /******* STEP 5 Run the algorithm while the Agenda size is greater than 0, We are not over our minute mark, and the BSSF is not equal to the state's lower_bound *******/
+            while (Agenda.Count > 0 && DateTime.Now < end && BSSF != Agenda.First.lower_bound)
             {
+                //Remove the first state off of the Agenda
                 State u = Agenda.Dequeue();
+
+                //Check if the lower bound is less than the current BSSF value
                 if (u.lower_bound < BSSF)
                 {
+                    //As long as the lower bound is less, we will create successors
                     HashSet<State> children = successors(u);
                     if (children == null)
                         continue;
+                    //For each successor that we have, check if we ran out of time and check if its lower bound is also less than the BSSF
                     foreach (State child in children)
                     {
                         if (DateTime.Now >= end)
                         {
                             break;
                         }
-                        //This is the weird requirement we're not sure of yet. :D
                         if (child.lower_bound < BSSF)
                         {
+                            //As long as the child's lower bound is less than the BSSF, we will check to see if the criterion is met.
                             if (criterion(child))
                             {
+                                //If the criterion is met, replace our BSSF and say this is our new best state
                                 best_state = child;
                                 BSSF = child.cost;
                             }
                             else
                             {
+                                //If the criterion is not met, add this state to our agenda but don't just use the lower bound as its priority; we calculate the priority based on a heuristic function
                                 Agenda.Enqueue(child, heuristic(child.lower_bound, child.cities_left));
                             }
                         }
@@ -327,6 +337,7 @@ namespace TSP
                 }
             }
 
+            //Check to see if our best state is not the initial BSSF we found
             if (best_state.cost != 0)
             {
                 Route.Clear();
@@ -335,6 +346,7 @@ namespace TSP
                 int first_city = (int)best_state.edges.GetKey(0);
                 int current_city = first_city;
 
+                //Order the cities for routing and drawing
                 while (true)
                 {
                     Route.Add(Cities[current_city]);
@@ -360,10 +372,7 @@ namespace TSP
             Program.MainForm.tbElapsedTime.Text = " " + (DateTime.Now - start);
 
             Program.MainForm.Invalidate();
-            /******* STEP 4 Add our first Route and BSSF to the agenda *******/
-            // TODO: We will add our state and the BSSF to the agenda
 
-            /******* STEP 5 Add our first Route and BSSF to the agenda *******/
 
         }
 
@@ -398,8 +407,10 @@ namespace TSP
                 include[x, j] = double.MaxValue;
                 include[i, x] = double.MaxValue;
             }
+            //also set the from-to value to infinity, this one won't be used in an include situation
             include[j, i] = double.MaxValue;
 
+            //If there is more than 1 city, it is possible to exclude that city; if not, then it is only possible to include that city
             if(state.cities_left > 1)
             {
                 //Reduce both of their matrices
@@ -422,6 +433,8 @@ namespace TSP
         }
 
         // successors(State) find successors for given State
+        //For every row and every column in our state matrix, find the first 0 (There will always be a 0 because of reduction) 
+        //If we find a 0, make sure we wouldn't be creating a premature cycle by including it
         public HashSet<State> successors(State state)
         {
             for (int x = 0; x < Cities.Length; x++)
@@ -437,17 +450,12 @@ namespace TSP
                     }
                 }
             }
-            //BSSF = state.cost;
-            if (criterion(state))
-            {
-                HashSet<State> same = new HashSet<State>();
-                same.Add(state);
-                return same;
-            }
             return null;
         }
 
         // premature(x, y, state) checks to see if given edge could be used to complete a premature cycle
+        // First we make sure there is at least more than 1 city left; if not, we are not in a premature cycle
+        // Then we make sure the to city: y never loops around to the from city: x. If that was the case, we would have a premature cycle
         public bool premature(int x, int y, State state)
         {
             if (state.cities_left > 1)
@@ -481,6 +489,7 @@ namespace TSP
         }
 
         // bound(costMatrix) find lower bound for given cost matrix
+        //Reduce all of the rows and columns; add the reduction to the lower bound
         public State bound(double[,] state, double bounding)
         {
             double lower_bound = bounding;
@@ -571,17 +580,8 @@ namespace TSP
             BSSF = bssf.costOfRoute();
         }
 
-        // return factorial of given number
-        public int factorial(int number)
-        {
-            int fact = number;
-            for (int x = 1; x < number; x++)
-            {
-                fact *= x;
-            }
-            return fact;
-        }
-
+        // init_state() create an initial matrix based on the costs of all the cities
+        // If we are on the diagonal of a matrix, set its value to infinity. Else, find the cost that it takes to go from that row to that column and add it to the matrix
         public void init_state()
         {
             initialState = new double[Cities.Length, Cities.Length];
